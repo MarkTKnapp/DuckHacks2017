@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+//import java.sql.*;
 /**
  * A server program which accepts requests from clients to
  * capitalize strings.  When clients connect, a new thread is
@@ -16,8 +16,21 @@ import java.net.Socket;
  * dependent.  If you ran it from a console window with the "java"
  * interpreter, Ctrl+C generally will shut it down.
  */
+
+
+
 public class ManhuntServer {
 
+   // JDBC driver name and database URL
+   //static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+   //static final String DB_URL = "jdbc:mysql://localhost";
+
+   //  Database credentials
+    //  static final String USER = "root";   //the user name;
+    //static final String PASS = "root";   //the password;
+    //Connection conn = null;
+    //Statement stmt = null;
+    //String sql;
     /**
      * Application method to run the server runs in an infinite loop
      * listening on port 9898.  When a connection is requested, it
@@ -121,4 +134,5 @@ public class ManhuntServer {
             System.out.println(message);
         }
     }
+
 }
