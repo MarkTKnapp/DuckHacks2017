@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.*;
 //import java.sql.*;
 /**
  * A server program which accepts requests from clients to
@@ -21,16 +22,19 @@ import java.net.Socket;
 
 public class ManhuntServer {
 
-   // JDBC driver name and database URL
-   //static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-   //static final String DB_URL = "jdbc:mysql://localhost";
+    private static ArrayList<Socket> sockets = new ArrayList<Socket>();
 
-   //  Database credentials
-    //  static final String USER = "root";   //the user name;
-    //static final String PASS = "root";   //the password;
-    //Connection conn = null;
-    //Statement stmt = null;
-    //String sql;
+   /*// JDBC driver name and database URL
+   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+   static final String DB_URL = "jdbc:mysql://localhost";
+
+    //Database credentials
+    static final String USER = "root";   //the user name;
+    static final String PASS = "root";   //the password;
+    Connection conn = null;
+    Statement stmt = null;
+    String sql; */
+
     /**
      * Application method to run the server runs in an infinite loop
      * listening on port 9898.  When a connection is requested, it
@@ -40,7 +44,7 @@ public class ManhuntServer {
      * messages.  It is certainly not necessary to do this.
      */
     public static void main(String[] args) throws Exception {
-        System.out.println("The capitalization server is running.");
+        System.out.println("The manhunt server is running.");
         int clientNumber = 0;
         ServerSocket listener = new ServerSocket(9898);
         try {
@@ -60,11 +64,13 @@ public class ManhuntServer {
     private static class Capitalizer extends Thread {
         private Socket socket;
         private int clientNumber;
-        private string user;
-        private string lKey;
+        private String user;
+        private String lKey;
 
         public Capitalizer(Socket socket, int clientNumber) {
             this.socket = socket;
+            sockets.add(socket);
+            log(Integer.toString(sockets.size()));
             this.clientNumber = clientNumber;
             log("New connection with client# " + clientNumber + " at " + socket);
         }
@@ -93,6 +99,7 @@ public class ManhuntServer {
                 while (true) {
                     String input = in.readLine();
                     if ( input.startsWith("#exit") ) {
+                        out.println("");
                         break;
                     } else if ( input.startsWith("#init") ) {
                         out.println("Creating a Lobby");
@@ -108,8 +115,8 @@ public class ManhuntServer {
                         out.println("Starting a match");
                     } else if ( input.startsWith("#loc") ) {
                         out.println("You have a location");
-                    } else if ( input.startsWith("Ayyyyyyy") ) {
-                        out.println("Lmaooooo");
+                    } else if ( input.startsWith("Ay") ) {
+                        sendToAll("Ayyyy Lmaooooo");
                     } else {
                         out.println("#error#");
                     }
@@ -119,10 +126,27 @@ public class ManhuntServer {
             } finally {
                 try {
                     socket.close();
+                    for ( int i = 0; i < sockets.size(); i++ ) {
+                        if ( socket.equals(sockets.get(i)) ) {
+                            sockets.remove(i);
+                        }
+                    }
                 } catch (IOException e) {
                     log("Couldn't close a socket, what's going on?");
                 }
                 log("Connection with client# " + clientNumber + " closed");
+            }
+        }
+
+        public void sendToAll ( String message ) {
+            try {
+                PrintWriter out;
+                for ( Socket s : sockets ) {
+                    out = new PrintWriter(s.getOutputStream(), true);
+                    out.println(message);
+                }
+            } catch (IOException e) {
+                System.err.println(e);
             }
         }
 

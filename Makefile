@@ -3,5 +3,5 @@ c:
 	java CapitalizeClient
 
 s:
-	javac CapitalizeServer.java
-	java CapitalizeServer
+	javac ManhuntServer.java
+	java ManhuntServer
