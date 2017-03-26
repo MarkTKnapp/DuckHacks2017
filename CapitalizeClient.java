@@ -11,6 +11,30 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import java.io.InputStream;
+
+
+class LogStreamReader implements Runnable {
+
+    private BufferedReader reader;
+
+    public LogStreamReader(InputStream is) {
+        this.reader = new BufferedReader(new InputStreamReader(is));
+    }
+
+    public void run() {
+        try {
+            String line = reader.readLine();
+            while (line != null) {
+                System.out.println(line);
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
 
 /**
  * A simple Swing-based client for the capitalization server.
@@ -25,6 +49,7 @@ public class CapitalizeClient {
     private JFrame frame = new JFrame("Capitalize Client");
     private JTextField dataField = new JTextField(40);
     private JTextArea messageArea = new JTextArea(8, 60);
+    LogStreamReader lsr;
 
     /**
      * Constructs the client by laying out the GUI and registering a
@@ -50,16 +75,6 @@ public class CapitalizeClient {
              */
             public void actionPerformed(ActionEvent e) {
                 out.println(dataField.getText());
-                   String response;
-                try {
-                    response = in.readLine();
-                    if (response == null || response.equals("")) {
-                          System.exit(0);
-                      }
-                } catch (IOException ex) {
-                       response = "Error: " + ex;
-                }
-                System.out.println(response);
                 dataField.selectAll();
             }
         });
@@ -86,11 +101,14 @@ public class CapitalizeClient {
         in = new BufferedReader(
                 new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
+        lsr = new LogStreamReader(socket.getInputStream());
+        Thread thread = new Thread(lsr, "LogStreamReader");
 
         // Consume the initial welcoming messages from the server
         for (int i = 0; i < 3; i++) {
             messageArea.append(in.readLine() + "\n");
         }
+        thread.start();
     }
 
     /**
