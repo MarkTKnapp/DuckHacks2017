@@ -12,6 +12,7 @@ import java.net.InetAddress;
 public class ManhuntServer {
 
    static ArrayList<Socket> sockets = new ArrayList<Socket>();
+    static int code = 0;
    // JDBC driver name and database URL
    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
    static final String DB_URL = "jdbc:mysql://localhost";
@@ -253,7 +254,11 @@ public class ManhuntServer {
                         out.println("Starting a match");
                     } else if ( input.startsWith("#loc") ) {
                         out.println("You have a location");
-                    }else if ( input.startsWith("#getbounds") ) {
+                    } else if ( input.startsWith("#getlcode") ) {
+			String lcode = "";
+			lcode = genCode(code++,0);
+			out.println("#" = lcode);
+		    } else if ( input.startsWith("#getbounds") ) {
 			/*#getbounds#lcode*/
 			String res = "bounds";
 			ArrayList<Socket> members = new ArrayList<Socket>();
@@ -343,6 +348,11 @@ public class ManhuntServer {
                 System.err.println(e);
             }
         }
+
+	String genCode ( int a, int b ) {
+	    if ( b == 4 ) { return String.valueOf((char)((a%26)+97)); }
+	    return genCode(a/26,b+1) + String.valueOf((char)((a%26)+97));
+	}
 
         /**
          * Logs a simple message.  In this case we just write the
