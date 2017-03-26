@@ -21,7 +21,7 @@ import java.net.InetAddress;
 
 public class ManhuntServer {
 
-   static ArrayList<Socket> sockets = new ArrayList<Socket>();
+    ArrayList<Socket> sockets = new ArrayList<Socket>();
    // JDBC driver name and database URL
    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
    static final String DB_URL = "jdbc:mysql://localhost";
@@ -209,7 +209,7 @@ public class ManhuntServer {
 			    ResultSet rs = s.getResultSet();
 			    
 			    while(rs.next()){
-				members.add(getSocket(InetAddress.getByName(rs.getString("addr").substring(1)), rs.getInt("port")));
+				members.add(new Socket(InetAddress.getByName(rs.getString("addr").substring(1)), rs.getInt("port")));
 			    }
 			    System.out.println(Arrays.toString(members.toArray()));
 			}catch(Exception e){
@@ -250,16 +250,7 @@ public class ManhuntServer {
             }
         }
 
-	public Socket getSocket ( InetAddress addr, int port ) {
-	    for ( Socket s : sockets ) {
-		if ( s.getInetAddress().equals(addr) && s.getPort() == port ) {
-		    return s;
-		}
-	    }
-	    return null;
-	}
-	
-        public void sendToAll ( String message, ArrayList<Socket> sockets ) {
+        public void sendToAll ( String message ) {
             try {
                 PrintWriter out;
                 for ( Socket s : sockets ) {
