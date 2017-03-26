@@ -1,0 +1,24 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="io.github.marktknapp.manhunt.TutorialFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/tutorialText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/hello_blank_fragment"
+        android:textSize="24sp"
+        android:gravity="center_horizontal|center" />
+
+    <Button
+        android:text="Dashboard"
+        android:layout_width="115dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/dash_butt"
+        android:layout_gravity="bottom|right"
+        android:visibility="invisible"/>
+</FrameLayout>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_create_game"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="io.github.marktknapp.manhunt.CreateGameActivity"
+    tools:showIn="@layout/activity_create_game2"
+    android:background="@color/colorPrimary">
+
+    <TextView
+        android:text="Game Code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/room_code_text_view"
+        android:minHeight="34dp"
+        android:textSize="24sp" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:id="@+id/game_types"
+        android:layout_below="@+id/textView5"
+        android:layout_alignParentStart="true"
+        android:backgroundTint="@color/common_google_signin_btn_text_light_disabled" />
+
+    <Button
+        android:text="Next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/next_create_button"
+        android:minWidth="100dip"
+        android:minHeight="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lCodeTextView"
+        android:textSize="24sp"
+        android:background="@android:drawable/edit_text"
+        android:backgroundTint="@color/common_google_signin_btn_text_light_disabled"
+        android:layout_below="@+id/room_code_text_view"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="@string/game_mode_desc_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/game_description"
+        android:layout_below="@+id/game_types"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp" />
+
+    <TextView
+        android:text="Time Limit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/game_description"
+        android:layout_alignStart="@+id/textView5"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="13dp"
+        android:id="@+id/textView9"
+        android:textSize="24sp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="time"
+        android:ems="10"
+        android:layout_below="@+id/textView9"
+        android:layout_alignStart="@+id/textView5"
+        android:layout_marginTop="11dp"
+        android:id="@+id/text_game_time"
+        android:background="@android:drawable/edit_text"
+        android:backgroundTint="@color/common_google_signin_btn_text_light_disabled"
+        android:width="120dp"
+        android:textSize="24sp"
+        android:hint="mins"
+        android:numeric="integer" />
+
+    <TextView
+        android:text="Game Type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView5"
+        android:minHeight="34dp"
+        android:textSize="24sp"
+        android:layout_marginTop="11dp"
+        android:layout_below="@+id/lCodeTextView"
+        android:layout_alignEnd="@+id/room_code_text_view" />
+
+    <TextView
+        android:text="Team"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView10"
+        android:textSize="24sp"
+        android:layout_below="@+id/text_game_time"
+        android:layout_alignStart="@+id/textView9" />
+
+    <RadioButton
+        android:text="Runners"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rad_button_runners"
+        android:layout_alignBaseline="@+id/rad_button_hunters"
+        android:layout_alignBottom="@+id/rad_button_hunters"
+        android:layout_toEndOf="@+id/textView9"
+        android:textColor="@color/color_Text" />
+
+    <RadioButton
+        android:text="Hunters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rad_button_hunters"
+        android:layout_below="@+id/textView10"
+        android:layout_alignStart="@+id/text_game_time"
+        android:textColor="@color/color_Text"
+        android:textColorHighlight="@color/color_Text"
+        android:checked="true" />
+
+</RelativeLayout>

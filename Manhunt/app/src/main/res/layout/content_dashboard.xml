@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_dashboard"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="io.github.marktknapp.manhunt.DashboardActivity"
+    tools:showIn="@layout/activity_dashboard">
+
+    <TextView
+        android:text="Nickname:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:id="@+id/textView3"
+        tools:textSize="24sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="24sp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textCapSentences"
+        android:ems="10"
+        android:hint="Enter Name"
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/editText"
+        android:textAlignment="center"
+        android:autoText="false"
+        android:textSize="24sp"
+        android:background="@android:drawable/edit_text"
+        android:backgroundTint="@color/common_google_signin_btn_text_light_disabled" />
+
+    <Button
+        android:text="Create Game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="84dp"
+        android:id="@+id/createbutton"
+        android:minWidth="240dp"
+        android:minHeight="47dp"
+        android:layout_below="@+id/jointext"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Join Game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/joinbutton"
+        android:scrollHorizontally="false"
+        android:minWidth="120dp"
+        android:minHeight="47dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/jointext"
+        android:hint="Enter Game Code"
+        android:minHeight="47dp"
+        android:background="@android:drawable/edit_text"
+        android:backgroundTint="@color/common_google_signin_btn_text_light_disabled"
+        android:layout_alignBaseline="@+id/joinbutton"
+        android:layout_alignBottom="@+id/joinbutton"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/joinbutton" />
+
+    <RadioButton
+        android:text="Runner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/runnerButton"
+        android:layout_below="@+id/jointext"
+        android:layout_alignEnd="@+id/textView3" />
+
+    <RadioButton
+        android:text="Hunter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/hunterButton"
+        android:layout_below="@+id/jointext"
+        android:layout_alignStart="@+id/createbutton"
+        android:checked="true" />
+</RelativeLayout>
