@@ -7,17 +7,7 @@ import java.net.Socket;
 import java.util.*;
 import java.sql.*;
 import java.net.InetAddress;
-/**
- * A server program which accepts requests from clients to
- * capitalize strings.  When clients connect, a new thread is
- * started to handle an interactive dialog in which the client
- * sends in a string and the server thread sends back the
- * capitalized version of the string.
- *
- * The program is runs in an infinite loop, so shutdown in platform
- * dependent.  If you ran it from a console window with the "java"
- * interpreter, Ctrl+C generally will shut it down.
- */
+
 
 public class ManhuntServer {
 
@@ -126,13 +116,15 @@ public class ManhuntServer {
 				content[12] + "');";
 			    stmt.executeUpdate(sql);
 
-			    sql = "insert into users values ('" + content[4] + "','" + socket.getPort() + "','" + socket.getInetAddress() + "');";
+			    sql = "insert into users values ('" + content[4] + "','" + socket.getPort() +
+				"','" + socket.getInetAddress() + "');";
 			    
 			    stmt.executeUpdate(sql);
 			    sql = "insert into memberof values ('" + content[2] + "','" + content[4] + "');";
 			    stmt.executeUpdate(sql);
 
-			     sql = "insert into team values ('" + content[13] + "','" + content[2] + "','" + content[4] + "');";
+			     sql = "insert into team values ('" + content[13] + "','" + content[2] + "','" +
+				 content[4] + "');";
 			    stmt.executeUpdate(sql);
 			    
 			}catch (Exception e){
@@ -145,8 +137,10 @@ public class ManhuntServer {
 			/*#join#lcode#lname#uid#tname*/
 			try {
 			   Statement s = conn.createStatement ();
-			   System.out.println("SELECT * from lobby WHERE lcode = '" + content[2] + " 'AND name = '" + content[3] + "';");
-			   s.executeQuery ( "SELECT * from lobby WHERE lcode = '" + content[2] + "' AND name = '" + content[3] + "';");
+			   System.out.println("SELECT * from lobby WHERE lcode = '" + content[2] +
+					      " 'AND name = '" + content[3] + "';");
+			   s.executeQuery ( "SELECT * from lobby WHERE lcode = '" + content[2] +
+					    "' AND name = '" + content[3] + "';");
 			   int count = 0;
 			   ResultSet rs = s.getResultSet ();
 			   while (rs.next ())
@@ -154,11 +148,13 @@ public class ManhuntServer {
 				   ++count;
 			       }
 			   if(count != 0){
-			       sql = "insert into users values ('" + content[4] + "','" + socket.getPort() + "','" + socket.getInetAddress() + "');";
+			       sql = "insert into users values ('" + content[4] + "','" + socket.getPort() +
+				   "','" + socket.getInetAddress() + "');";
 			       stmt.executeUpdate(sql);
 			       sql = "insert into memberof values('" + content[2]+ "','" + content[4] + "');";
 			       stmt.executeUpdate(sql);
-			       sql = "insert into team values ('" + content[5] + "','" + content[2] + "','" + content[4] + "');";
+			       sql = "insert into team values ('" + content[5] + "','" + content[2] + "','" +
+				   content[4] + "');";
 			    stmt.executeUpdate(sql);
 			       out.println("#succ");
 			   }else{
@@ -175,8 +171,9 @@ public class ManhuntServer {
 			String res = "";
 			try{
 			    Statement s = conn.createStatement ();
-			    // System.out.println("SELECT uid FROM team WHERE lcode = '" + content[2] + "' AND tname = '" + content[3] + "' ;");
-			    s.executeQuery("SELECT uid FROM team WHERE lcode = '" + content[2] + "' AND tname = '" + content[3] + "' ;");
+			   
+			    s.executeQuery("SELECT uid FROM team WHERE lcode = '" + content[2] +
+					   "' AND tname = '" + content[3] + "' ;");
 			    res = "#" + content[3];
 			    ResultSet rs = s.getResultSet();
 			  
@@ -186,7 +183,8 @@ public class ManhuntServer {
 			    }
 			    res += "#" + content[4];
 			    s = conn.createStatement ();
-			    s.executeQuery("SELECT uid FROM team WHERE lcode = '" + content[2] + "' AND tname = '" + content[4] + "' ;");
+			    s.executeQuery("SELECT uid FROM team WHERE lcode = '" + content[2] +
+					   "' AND tname = '" + content[4] + "' ;");
 			    
 			    rs = s.getResultSet();
 			    while(rs.next()){
@@ -204,7 +202,7 @@ public class ManhuntServer {
 			   
 			    /*#start#lcode*/
 			    Statement s = conn.createStatement ();
-			    // System.out.println("SELECT uid FROM team WHERE lcode = '" + content[2] + "' AND tname = '" + content[3] + "' ;");
+			   
 			    s.executeQuery("SELECT port, addr FROM users u, memberof m  WHERE m.uid= u.uid AND lcode = '" + content[2] + "';");
 			    ResultSet rs = s.getResultSet();
 			    
