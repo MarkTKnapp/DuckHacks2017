@@ -110,7 +110,7 @@ public class ManhuntServer {
 			
                     } else if ( input.startsWith("#init") ) {
 			/*format #init#lcode#name#uid#TLLAT#TLLONG#TRLAT#TRLONG#BLLAT#BLLONG#BRLAT#BRLONG#tname#
-			 #TLLAT#TLLONG#TRLAT#TRLONG#BLLAT#BLLONG#BRLAT#BRLONG*/
+			 #TLLAT#TLLONG#TRLAT#TRLONG#BLLAT#BLLONG#BRLAT#BRLONG#time*/
 			try{
 			     int namecount = 0;
 			  Statement s = conn.createStatement (); 
@@ -125,7 +125,7 @@ public class ManhuntServer {
 			       sql = "insert into lobby values(" + "'" + content[2] + "','" + content[3] + "','" +
 				   content[5] + "','" + content[6] + "','" + content[7] + "','" +
 				   content[8] + "','" + content[9] + "','" + content[10] + "','" + content[11] + "','" +
-				   content[12] + "', 0);";
+				   content[12] + "', 0, '" + content[22] + "');";
 			       stmt.executeUpdate(sql);
 
 			       sql = "insert into users values ('" + content[4] + "','" + socket.getPort() +
@@ -232,6 +232,7 @@ public class ManhuntServer {
                         out.println("Displaying teamnames");
                     } else if ( input.startsWith("#start") ) {
 			 ArrayList<Socket> members = new ArrayList<Socket>();
+			  String time = "";
 			try{
 			   
 			    /*#start#lcode*/
@@ -243,13 +244,21 @@ public class ManhuntServer {
 			    while(rs.next()){
 				members.add(getSocket(InetAddress.getByName(rs.getString("addr").substring(1)), rs.getInt("port")));
 			    }
+			    
+			     s.executeQuery("SELECT time from lobby where lcode = '" + content[2] + "';");
+			   rs = s.getResultSet();
+			  
+			    while(rs.next()){
+				time = rs.getString("time");
+			    }
+			    
 			    sql = "UPDATE lobby SET active= 1 WHERE lcode = '" + content[2] + "';";
 			    stmt.executeUpdate(sql);
 			    // System.out.println(Arrays.toString(members.toArray()));
 			}catch(Exception e){
 			     e.printStackTrace();
 			}
-			    sendToAll("#start",members);
+			    sendToAll("#start#"+time,members);
 			
                         out.println("Starting a match");
                     } else if ( input.startsWith("#loc") ) {
@@ -257,7 +266,7 @@ public class ManhuntServer {
                     } else if ( input.startsWith("#getlcode") ) {
 			String lcode = "";
 			lcode = genCode(code++,0);
-			out.println("#" = lcode);
+			out.println("#" + lcode);
 		    } else if ( input.startsWith("#getbounds") ) {
 			/*#getbounds#lcode*/
 			String res = "bounds";
