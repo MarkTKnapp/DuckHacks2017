@@ -111,50 +111,74 @@ public class ManhuntServer {
 			/*format #init#lcode#name#uid#TLLAT#TLLONG#TRLAT#TRLONG#BLLAT#BLLONG#BRLAT#BRLONG#tname#
 			 #TLLAT#TLLONG#TRLAT#TRLONG#BLLAT#BLLONG#BRLAT#BRLONG*/
 			try{
-			    sql = "insert into lobby values(" + "'" + content[2] + "','" + content[3] + "','" +
-			         content[5] + "','" + content[6] + "','" + content[7] + "','" +
-				content[8] + "','" + content[9] + "','" + content[10] + "','" + content[11] + "','" +
-				content[12] + "');";
-			    stmt.executeUpdate(sql);
-
-			    sql = "insert into users values ('" + content[4] + "','" + socket.getPort() +
-				"','" + socket.getInetAddress() + "');";
+			     int namecount = 0;
+			  Statement s = conn.createStatement (); 
+			   s.executeQuery ( "SELECT * from users WHERE uid = '" + content[4] +"';");
+			   ResultSet rs = s.getResultSet ();
+			   while (rs.next ())
+			       {
+				   ++namecount;
+			       }
+			   if(namecount==0){
 			    
-			    stmt.executeUpdate(sql);
-			    sql = "insert into memberof values ('" + content[2] + "','" + content[4] + "');";
-			    stmt.executeUpdate(sql);
+			       sql = "insert into lobby values(" + "'" + content[2] + "','" + content[3] + "','" +
+				   content[5] + "','" + content[6] + "','" + content[7] + "','" +
+				   content[8] + "','" + content[9] + "','" + content[10] + "','" + content[11] + "','" +
+				   content[12] + "', 0);";
+			       stmt.executeUpdate(sql);
 
-			     sql = "insert into team values ('" + content[13] + "','" + content[2] + "','" +
-				 content[4] + "');";
-			    stmt.executeUpdate(sql);
+			       sql = "insert into users values ('" + content[4] + "','" + socket.getPort() +
+				   "','" + socket.getInetAddress() + "');";
+			    
+			       stmt.executeUpdate(sql);
+			       sql = "insert into memberof values ('" + content[2] + "','" + content[4] + "');";
+			       stmt.executeUpdate(sql);
 
-			     sql = "insert into jailbounds values(" + "'" + content[2] + "','" + content[14] +
-				 "','" +content[15] + "','" + content[16] + "','" + content[17] + "','" +
-				content[18] + "','" + content[19] + "','" + content[20] + "','" + content[21] +
-				 "');";
-			    stmt.executeUpdate(sql);
+			       sql = "insert into team values ('" + content[13] + "','" + content[2] + "','" +
+				   content[4] + "');";
+			       stmt.executeUpdate(sql);
+
+			       sql = "insert into jailbounds values(" + "'" + content[2] + "','" + content[14] +
+				   "','" +content[15] + "','" + content[16] + "','" + content[17] + "','" +
+				   content[18] + "','" + content[19] + "','" + content[20] + "','" + content[21] +
+				   "');";
+			       stmt.executeUpdate(sql);
+			         out.println("#succ");
+			   }else{
+			        out.println("#fail#badname");
+			   }
 			    
 			}catch (Exception e){
 			    e.printStackTrace();
+			    out.println("#fail");
 			}
 			   
 			 
-                        out.println("Creating a Lobby");
+                      
                     } else if ( input.startsWith("#join") ) {
 			/*#join#lcode#lname#uid#tname*/
 			try {
-			   Statement s = conn.createStatement ();
-			   System.out.println("SELECT * from lobby WHERE lcode = '" + content[2] +
-					      " 'AND name = '" + content[3] + "';");
+			   Statement s = conn.createStatement (); 
+			   //System.out.println("SELECT * from lobby WHERE lcode = '" + content[2] +
+			   //   " 'AND name = '" + content[3] + "';");
 			   s.executeQuery ( "SELECT * from lobby WHERE lcode = '" + content[2] +
-					    "' AND name = '" + content[3] + "';");
+					    "' AND name = '" + content[3] + "' AND active = 0;");
 			   int count = 0;
 			   ResultSet rs = s.getResultSet ();
 			   while (rs.next ())
 			       {
 				   ++count;
 			       }
-			   if(count != 0){
+			   int namecount = 0;
+			   conn.createStatement (); 
+			   s.executeQuery ( "SELECT * from users WHERE uid = '" + content[4] +"';");
+			    rs = s.getResultSet ();
+			   while (rs.next ())
+			       {
+				   ++namecount;
+			       }
+			  
+			   if(count != 0 && namecount ==0){
 			       sql = "insert into users values ('" + content[4] + "','" + socket.getPort() +
 				   "','" + socket.getInetAddress() + "');";
 			       stmt.executeUpdate(sql);
@@ -164,6 +188,8 @@ public class ManhuntServer {
 				   content[4] + "');";
 			    stmt.executeUpdate(sql);
 			       out.println("#succ");
+			   }else if(namecount !=0){
+			       out.println("#fail#badname");
 			   }else{
 			       out.println("#fail");
 			   }
@@ -216,6 +242,8 @@ public class ManhuntServer {
 			    while(rs.next()){
 				members.add(getSocket(InetAddress.getByName(rs.getString("addr").substring(1)), rs.getInt("port")));
 			    }
+			    sql = "UPDATE lobby SET active= 1 WHERE lcode = '" + content[2] + "';";
+			    stmt.executeUpdate(sql);
 			    // System.out.println(Arrays.toString(members.toArray()));
 			}catch(Exception e){
 			     e.printStackTrace();
