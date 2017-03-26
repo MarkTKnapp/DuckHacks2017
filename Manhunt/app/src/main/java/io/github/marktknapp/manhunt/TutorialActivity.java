@@ -43,7 +43,7 @@ public class TutorialActivity extends FragmentActivity  {
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
 
-        tutorialMessages[0] = "One player will need host the new game after entering a username and settings, which can be done in the Dashboard.";
+        tutorialMessages[0] = "One player will need host the new game after entering a username and settings, which can be done in the Dashboard. \r\n(Swipe right to continue the tutorial)";
         tutorialMessages[1] = "To join the hosts' game, you will need the Game Code to join the hosts' game.";
         tutorialMessages[2] = "The host will select the boundaries of the game and everyone will select a Team to join.";
         tutorialMessages[3] = "You will have 2 minutes to run as far as you can!";
