@@ -108,7 +108,8 @@ public class ManhuntServer {
                         break;
 			
                     } else if ( input.startsWith("#init") ) {
-			/*format #init#lcode#name#uid#TLLAT#TLLONG#TRLAT#TRLONG#BLLAT#BLLONG#BRLAT#BRLONG#tname*/
+			/*format #init#lcode#name#uid#TLLAT#TLLONG#TRLAT#TRLONG#BLLAT#BLLONG#BRLAT#BRLONG#tname#
+			 #TLLAT#TLLONG#TRLAT#TRLONG#BLLAT#BLLONG#BRLAT#BRLONG*/
 			try{
 			    sql = "insert into lobby values(" + "'" + content[2] + "','" + content[3] + "','" +
 			         content[5] + "','" + content[6] + "','" + content[7] + "','" +
@@ -125,6 +126,12 @@ public class ManhuntServer {
 
 			     sql = "insert into team values ('" + content[13] + "','" + content[2] + "','" +
 				 content[4] + "');";
+			    stmt.executeUpdate(sql);
+
+			     sql = "insert into jailbounds values(" + "'" + content[2] + "','" + content[14] +
+				 "','" +content[15] + "','" + content[16] + "','" + content[17] + "','" +
+				content[18] + "','" + content[19] + "','" + content[20] + "','" + content[21] +
+				 "');";
 			    stmt.executeUpdate(sql);
 			    
 			}catch (Exception e){
@@ -209,7 +216,7 @@ public class ManhuntServer {
 			    while(rs.next()){
 				members.add(getSocket(InetAddress.getByName(rs.getString("addr").substring(1)), rs.getInt("port")));
 			    }
-			    System.out.println(Arrays.toString(members.toArray()));
+			    // System.out.println(Arrays.toString(members.toArray()));
 			}catch(Exception e){
 			     e.printStackTrace();
 			}
@@ -218,7 +225,47 @@ public class ManhuntServer {
                         out.println("Starting a match");
                     } else if ( input.startsWith("#loc") ) {
                         out.println("You have a location");
-                    }else if ( input.startsWith("#end") ) {
+                    }else if ( input.startsWith("#getbounds") ) {
+			/*#getbounds#lcode*/
+			String res = "bounds";
+			ArrayList<Socket> members = new ArrayList<Socket>();
+			    try{
+				Statement s = conn.createStatement ();
+				
+				s.executeQuery("SELECT port, addr FROM users u, memberof m  WHERE m.uid= u.uid AND lcode = '" + content[2] + "';");
+				ResultSet rs = s.getResultSet();
+				
+				while(rs.next()){
+				    members.add(getSocket(InetAddress.getByName(rs.getString("addr").substring(1)), rs.getInt("port")));
+				}
+				
+				s = conn.createStatement ();
+				
+				s.executeQuery("SELECT * FROM jailbounds  WHERE lcode = '" + content[2] + "';");
+				 rs = s.getResultSet();
+			    
+				while(rs.next()){
+				    res += "#" + rs.getString("TLLAT")+"#"+ rs.getString("TLLONG")+ "#" +
+					rs.getString("TRLAT")+"#"+ rs.getString("TRLONG")+ "#" +
+					rs.getString("BLLAT")+"#"+ rs.getString("BLLONG")+ "#"+
+					rs.getString("BRLAT")+"#"+ rs.getString("BRLONG");
+				}
+				s.executeQuery("SELECT * FROM lobby  WHERE lcode = '" + content[2] + "';");
+				rs = s.getResultSet();
+				
+				while(rs.next()){
+				res += "#" + rs.getString("TLLAT")+"#"+ rs.getString("TLLONG")+ "#" +
+				    rs.getString("TRLAT")+"#"+ rs.getString("TRLONG")+ "#" +
+				    rs.getString("BLLAT")+"#"+ rs.getString("BLLONG")+ "#"+
+				rs.getString("BRLAT")+"#"+ rs.getString("BRLONG");
+				}
+				// System.out.println(Arrays.toString(members.toArray()));
+			    }catch(Exception e){
+				e.printStackTrace();
+			    }
+			sendToAll(res,members);
+			
+		    }else if ( input.startsWith("#end") ) {
 			/*#end#lcode*/
 			try{
 			    sql ="delete from lobby where lcode = '"+content[2]+ "';";
