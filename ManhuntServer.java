@@ -89,14 +89,14 @@ public class ManhuntServer {
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
                 // Send a welcome message to the client.
-                out.println("Hello, you are client #" + clientNumber + ".");
-                out.println("Enter a line starting with #exit to quit\n");
 
                 // Get messages from the client, line by line; return them
                 // capitalized
                 while (true) {
                     String input = in.readLine();
 		    String content[] = input.split("#");
+		    
+		    System.out.println(Arrays.toString(content));
                     if ( input.startsWith("#exit") ) {
                       	/*#exit#uid*/
 			try{
@@ -109,6 +109,7 @@ public class ManhuntServer {
                         break;
 			
                     } else if ( input.startsWith("#init") ) {
+			System.out.println(content[4]);
 			/*format #init#lcode#name#uid#TLLAT#TLLONG#TRLAT#TRLONG#BLLAT#BLLONG#BRLAT#BRLONG#tname#
 			 #TLLAT#TLLONG#TRLAT#TRLONG#BLLAT#BLLONG#BRLAT#BRLONG#time*/
 			try{
@@ -144,8 +145,10 @@ public class ManhuntServer {
 				   content[18] + "','" + content[19] + "','" + content[20] + "','" + content[21] +
 				   "');";
 			       stmt.executeUpdate(sql);
+			       System.out.println("succ");
 			         out.println("#succ");
 			   }else{
+			       System.out.println("fail");
 			        out.println("#fail#badname");
 			   }
 			    
@@ -197,7 +200,7 @@ public class ManhuntServer {
 			}catch (Exception e){
 			    e.printStackTrace();
 			}
-                        out.println("Joining a Lobby");
+                        
                     } else if ( input.startsWith("#new") ) {
                         out.println("Creating Team");
                     } else if ( input.startsWith("#refresh") ) {
@@ -227,15 +230,17 @@ public class ManhuntServer {
 			}catch (Exception e){
 			    e.printStackTrace();
 			}
+			System.out.println(res);
                         out.println(res);
                     } else if ( input.startsWith("#display") ) {
                         out.println("Displaying teamnames");
                     } else if ( input.startsWith("#start") ) {
 			 ArrayList<Socket> members = new ArrayList<Socket>();
 			  String time = "";
+			   int i = 0;
 			try{
 			   
-			    /*#start#lcode*/
+			    /*#start#lcode#tname*/
 			    Statement s = conn.createStatement ();
 			   
 			    s.executeQuery("SELECT port, addr FROM users u, memberof m  WHERE m.uid= u.uid AND lcode = '" + content[2] + "';");
@@ -254,16 +259,61 @@ public class ManhuntServer {
 			    
 			    sql = "UPDATE lobby SET active= 1 WHERE lcode = '" + content[2] + "';";
 			    stmt.executeUpdate(sql);
+
+			     s = conn.createStatement ();
+			   
+			    s.executeQuery("SELECT COUNT(*) AS numMem FROM team WHERE lcode = '" + content[2] + "' AND tname = '" + content[3] + "';");
+			    rs = s.getResultSet();
+			   
+			    while(rs.next()){
+				i = rs.getInt("numMem");
+			    }
+			    
 			    // System.out.println(Arrays.toString(members.toArray()));
 			}catch(Exception e){
 			     e.printStackTrace();
 			}
-			    sendToAll("#start#"+time,members);
+			sendToAll("#start#"+time + "#" + Integer.toString(i),members);
 			
-                        out.println("Starting a match");
+			// out.println("Starting a match");
                     } else if ( input.startsWith("#loc") ) {
                         out.println("You have a location");
-                    } else if ( input.startsWith("#getlcode") ) {
+                    } else if ( input.startsWith("#tag") ) {
+			String res = "bounds";
+			ArrayList<Socket> members = new ArrayList<Socket>();
+			try{
+			    Statement s = conn.createStatement ();
+			    
+			    s.executeQuery("SELECT port, addr FROM users u, memberof m  WHERE m.uid= u.uid AND lcode = '" + content[2] + "';");
+			    ResultSet rs = s.getResultSet();
+			    
+			    while(rs.next()){
+				members.add(getSocket(InetAddress.getByName(rs.getString("addr").substring(1)), rs.getInt("port")));
+			    }
+			}catch(Exception e){
+			    e.printStackTrace();
+			}
+			
+			System.out.println("members: "+ Arrays.toString(members.toArray()));
+			sendToAll("#tag", members);
+		    } else if ( input.startsWith("#jailbreak") ) {
+			String res = "bounds";
+			ArrayList<Socket> members = new ArrayList<Socket>();
+			try{
+			    Statement s = conn.createStatement ();
+			    
+			    s.executeQuery("SELECT port, addr FROM users u, memberof m  WHERE m.uid= u.uid AND lcode = '" + content[2] + "';");
+			    ResultSet rs = s.getResultSet();
+			    
+			    while(rs.next()){
+				members.add(getSocket(InetAddress.getByName(rs.getString("addr").substring(1)), rs.getInt("port")));
+			    }
+			}catch(Exception e){
+			    e.printStackTrace();
+			}
+			System.out.println("members: "+ Arrays.toString(members.toArray()));
+			sendToAll("#jailbreak", members);
+		    } else if ( input.startsWith("#getlcode") ) {
 			String lcode = "";
 			lcode = genCode(code++,0);
 			out.println("#" + lcode);
@@ -299,14 +349,14 @@ public class ManhuntServer {
 				res += "#" + rs.getString("TLLAT")+"#"+ rs.getString("TLLONG")+ "#" +
 				    rs.getString("TRLAT")+"#"+ rs.getString("TRLONG")+ "#" +
 				    rs.getString("BLLAT")+"#"+ rs.getString("BLLONG")+ "#"+
-				rs.getString("BRLAT")+"#"+ rs.getString("BRLONG");
+				    rs.getString("BRLAT")+"#"+ rs.getString("BRLONG") + "#" + rs.getInt("time");
 				}
 				// System.out.println(Arrays.toString(members.toArray()));
 			    }catch(Exception e){
 				e.printStackTrace();
 			    }
-			sendToAll(res,members);
-			
+			    //sendToAll(res,members);
+			    out.println(res);
 		    }else if ( input.startsWith("#end") ) {
 			/*#end#lcode*/
 			try{
